@@ -4,7 +4,7 @@
   "description": "This server is an addition to our website",
   "main": "index.js",
   "scripts": {
-    "start": "index.js",
+    "web": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Kjell Maekelberg",
