@@ -50,7 +50,7 @@ app.post("/login", (req, res) => {
     })
 })
 
-app.post("/register",authToken, async (req, res) => {
+app.post("/register", authToken, async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const user = {
@@ -69,21 +69,24 @@ app.post("/register",authToken, async (req, res) => {
     }
 })
 
-app.post("/coupon/:id",authToken, (req, res) => {
-    cdata.addcoupon({id: req.params.id, mail: req.body.couponInfo.email, banknr: req.body.couponInfo.bankNr, telNr: req.body.couponInfo.telephone}, cb => {
-        if (cb.data === undefined){
+app.post("/coupon/:id", authToken, (req, res) => {
+    cdata.addcoupon({
+        id: req.params.id,
+        mail: req.body.couponInfo.email,
+        banknr: req.body.couponInfo.bankNr,
+        telNr: req.body.couponInfo.telephone
+    }, cb => {
+        if (cb.data === undefined) {
             console.log(req.body.couponInfo)
             fetch(`https://sys.bitpc.be/websvc/tris/w_comm.php?req_type=add_poster_job_by_webreq&mailto=${req.body.couponInfo.email}&code=${req.params.id}`, {
                 method: 'GET'
-                }).then()
+            }).then()
             res.status(201).end(JSON.stringify({status: 201}))
-        }else {
+        } else {
             res.status(400).end(JSON.stringify({status: 400}))
         }
     })
 })
-
-
 
 
 //--------------------------------//
@@ -94,6 +97,7 @@ function authToken(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return res.sendStatus(401)
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRECY, (err, user) => {
+        if (err) console.log(err)
         if (err) return res.sendStatus(403)
         req.user = user
         next()
