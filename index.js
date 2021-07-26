@@ -50,7 +50,7 @@ app.post("/login", (req, res) => {
     })
 })
 
-app.post("/register", async (req, res) => {
+app.post("/register",authToken, async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const user = {
@@ -69,7 +69,7 @@ app.post("/register", async (req, res) => {
     }
 })
 
-app.post("/coupon/:id", (req, res) => {
+app.post("/coupon/:id",authToken, (req, res) => {
     cdata.addcoupon({id: req.params.id, mail: req.body.couponInfo.email, banknr: req.body.couponInfo.bankNr, telNr: req.body.couponInfo.telephone}, cb => {
         if (cb.data === undefined){
             console.log(req.body.couponInfo)
